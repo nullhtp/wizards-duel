@@ -1,0 +1,12 @@
+{
+  "name": "wizards-duel-app-expo",
+  "displayName": "wizards-duel-app-expo",
+  "expo": {
+    "name": "wizards-duel-app-expo",
+    "slug": "wizards-duel-app-expo",
+    "version": "0.0.1",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}
