@@ -68,7 +68,6 @@ const DuelComponent = observer(() => {
     const [winner, setWinner] = useState<Wizard | null>(null);
     const [leftChecklist, setLeftChecklist] = useState<PreparationChecklist | null>(null);
     const [rightChecklist, setRightChecklist] = useState<PreparationChecklist | null>(null);
-    announcment.play(AnnouncmentEvent.DuelPrepare);
 
     const onDuelEnd = () => {
         // navigation.navigate('Main');
@@ -79,10 +78,10 @@ const DuelComponent = observer(() => {
         setRightChecklist(null);
     }
 
-    const onPoseDetected = (params: OnPoseDetectionParams) => {
+    const onPoseDetected = async (params: OnPoseDetectionParams) => {
 
         if (duelStore.status === DuelStatus.Created) {
-            announcment.play(AnnouncmentEvent.DuelPrepare);
+            await announcment.play(AnnouncmentEvent.DuelPrepare);
             duelStore.updateGameStatus(DuelStatus.Prepare);
 
             return;

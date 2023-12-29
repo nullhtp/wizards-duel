@@ -1,4 +1,3 @@
-// import Sound from 'react-native-sound';
 import { Audio } from 'expo-av';
 
 export enum AnnouncmentEvent {
@@ -26,20 +25,13 @@ export class AnnouncmentSpeachService {
         }
 
         const { sound } = await Audio.Sound.createAsync(soundsFiles[announce]);
+        sound.setOnPlaybackStatusUpdate((status) => {
+            if (status.isLoaded && status.didJustFinish) {
+                sound.unloadAsync();
+                callback();
+                return;
+            }
+        });
         await sound.playAsync();
-        await sound.unloadAsync();
-        callback();
-
-        // const sound = new Sound(soundsFiles[announce], Sound.MAIN_BUNDLE, (error) => {
-        //     if (error) {
-        //         console.log('failed to load the sound', error);
-        //         return;
-        //     }
-
-        //     sound.play(() => {
-        //         sound.release();
-        //         callback();
-        //     });
-        // })
     }
 }

@@ -5,10 +5,10 @@ export const getRandomAction = () => {
     if (probability < 2) {
         return ActionTypes.None;
     }
-    if (probability < 6) {
+    if (probability < 5) {
         return ActionTypes.Defense;
     }
-    if (probability < 9) {
+    if (probability < 8) {
         return ActionTypes.Attack;
     }
     return ActionTypes.Perk;

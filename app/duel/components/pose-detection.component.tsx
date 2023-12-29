@@ -44,7 +44,7 @@ const OUTPUT_TENSOR_HEIGHT = OUTPUT_TENSOR_WIDTH / (IS_IOS ? 9 / 16 : 3 / 4);
 
 // Whether to auto-render TensorCamera preview.
 const AUTO_RENDER = true;
-const POSE_DETECTION_UPDATE_MS = 500;
+const POSE_DETECTION_UPDATE_MS = 700;
 let lastUpdated = Date.now();
 
 export type OnPoseDetectionParams = {
@@ -122,10 +122,7 @@ const PoseDetectionComponent = observer((params: PoseDetectionParams) => {
 
             const currentDate = Date.now();
 
-
             if (currentDate - lastUpdated > POSE_DETECTION_UPDATE_MS) {
-
-                console.log(currentDate, lastUpdated, currentDate - lastUpdated);
 
                 lastUpdated = currentDate;
 
@@ -143,8 +140,9 @@ const PoseDetectionComponent = observer((params: PoseDetectionParams) => {
 
                 const poseWithDerection = DetectorPoseDirection.getPosesWithDirection(firstWizardPose, secondWizardPose, CAM_PREVIEW_WIDTH);
 
-                const leftWizardAction = detector.getActionByPose(poseWithDerection.left);//getRandomAction(); //  
-                const rightWizardAction = detector.getActionByPose(poseWithDerection.right); //getRandomAction(); //
+                const leftWizardAction = getRandomAction(); //  detector.getActionByPose(poseWithDerection.left);//
+                const rightWizardAction = getRandomAction(); // detector.getActionByPose(poseWithDerection.right); //
+
 
                 if (params?.onPoseDetected) {
                     params.onPoseDetected({
@@ -159,14 +157,6 @@ const PoseDetectionComponent = observer((params: PoseDetectionParams) => {
             if (rafId.current === 0) {
                 return;
             }
-
-            // Render camera preview manually when autorender=false.
-            if (!AUTO_RENDER) {
-                updatePreview();
-                gl.endFrameEXP();
-            }
-
-
             rafId.current = requestAnimationFrame(loop);
         };
 

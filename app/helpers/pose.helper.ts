@@ -21,7 +21,9 @@ export class BodyPartHelper {
     }
 
     static isAnyPartHigher(mainParts: BodyPart[], relatedParts: BodyPart[], distance: number) {
-        const condFn = (mp: BodyPart, rp: BodyPart) => { return mp.y - rp.y > distance; };
+        const condFn = (mp: BodyPart, rp: BodyPart) => {
+            return mp.y - rp.y > distance;
+        };
         return BodyPartHelper.isAnyPart(mainParts, relatedParts, condFn)
     }
 
@@ -87,7 +89,7 @@ export class DetectorPoseAction {
                 pose[BodyPartTypes.LeftWrist],
                 pose[BodyPartTypes.RightElbow],
                 pose[BodyPartTypes.LeftElbow]
-            ], 10)
+            ], 20)
     }
 
     isDefencePose(pose: Pose) {
@@ -104,13 +106,15 @@ export class DetectorPoseAction {
             return ActionTypes.Perk;
         }
 
+        if (this.isDefencePose(pose)) {
+            return ActionTypes.Defense;
+        }
+
+
         if (this.isAttackPose(pose)) {
             return ActionTypes.Attack;
         }
 
-        if (this.isDefencePose(pose)) {
-            return ActionTypes.Defense;
-        }
 
         return ActionTypes.None;
     }
