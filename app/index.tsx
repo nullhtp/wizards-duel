@@ -1,14 +1,16 @@
 import React from 'react';
 import { StyleSheet, Button, TouchableOpacity } from 'react-native';
 import { ImageBackground } from 'react-native';
+import { router } from "expo-router";
+import { StatusBar } from 'expo-status-bar';
 
-const MenuComponent = ({ navigation }: any) => {
+const MenuComponent = () => {
 
     return (
-        <TouchableOpacity style={{ width: '100%' }} onPress={() => navigation.navigate('Duel')}>
-
+        <TouchableOpacity style={{ width: '100%' }} onPress={() => router.replace('/duel')}>
+            <StatusBar hidden={true} />
             <ImageBackground
-                source={require('../../assets/start_screen.png')}
+                source={require('../assets/start_screen.png')}
                 style={{
                     width: '100%',
                     height: '100%',

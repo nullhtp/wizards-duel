@@ -6,9 +6,8 @@ import { Dimensions, Platform, View, Text, StyleSheet } from 'react-native';
 import { DetectorPoseAction, DetectorPoseDirection } from '../../helpers/pose.helper';
 import * as tf from '@tensorflow/tfjs';
 import { cameraWithTensors } from '@tensorflow/tfjs-react-native';
-import { Camera } from 'expo-camera';
+import { Camera, CameraType } from 'expo-camera';
 import * as posedetection from '@tensorflow-models/pose-detection';
-import { ExpoWebGLRenderingContext } from 'expo-gl';
 import { mapToPose } from '../service/pose-mapper';
 
 
@@ -25,9 +24,10 @@ const IS_IOS = Platform.OS === 'ios';
 // devices.
 //
 // This might not cover all cases.
-const CAM_PREVIEW_WIDTH = 600;
 
-const CAM_PREVIEW_HEIGHT = CAM_PREVIEW_WIDTH / (IS_IOS ? 9 / 16 : 3 / 4);
+// const CAM_PREVIEW_WIDTH = 600;
+
+// const CAM_PREVIEW_HEIGHT = CAM_PREVIEW_WIDTH / (IS_IOS ? 9 / 16 : 3 / 4);
 
 // const CAM_PREVIEW_HEIGHT = Dimensions.get('window').height;
 
@@ -39,13 +39,16 @@ const CAM_PREVIEW_HEIGHT = CAM_PREVIEW_WIDTH / (IS_IOS ? 9 / 16 : 3 / 4);
 // For movenet, the size here doesn't matter too much because the model will
 // preprocess the input (crop, resize, etc). For best result, use the size that
 // doesn't distort the image.
-const OUTPUT_TENSOR_WIDTH = 600;
+const OUTPUT_TENSOR_WIDTH = Math.round(Dimensions.get('window').width / 4) * 4;
 const OUTPUT_TENSOR_HEIGHT = OUTPUT_TENSOR_WIDTH / (IS_IOS ? 9 / 16 : 3 / 4);
 
 // Whether to auto-render TensorCamera preview.
+const RATIO = !IS_IOS ? '16:9' : '4:3';
 const AUTO_RENDER = true;
-const POSE_DETECTION_UPDATE_MS = 700;
+const POSE_DETECTION_UPDATE_MS = 500;
 let lastUpdated = Date.now();
+
+let model: posedetection.PoseDetector | null = null
 
 export type OnPoseDetectionParams = {
     leftWizardAction: ActionTypes,
@@ -62,8 +65,7 @@ const detector = new DetectorPoseAction();
 const PoseDetectionComponent = observer((params: PoseDetectionParams) => {
 
     const cameraRef = useRef(null);
-    const [tfReady, setTfReady] = useState(false);
-    const [model, setModel] = useState<posedetection.PoseDetector>();
+    // const [model, setModel] = useState<posedetection.PoseDetector>();
 
     // Use `useRef` so that changing it won't trigger a re-render.
     //
@@ -75,6 +77,7 @@ const PoseDetectionComponent = observer((params: PoseDetectionParams) => {
     useEffect(() => {
         async function prepare() {
             rafId.current = null;
+            model = null;
 
             // Camera permission.
             await Camera.requestCameraPermissionsAsync();
@@ -85,18 +88,14 @@ const PoseDetectionComponent = observer((params: PoseDetectionParams) => {
             // Load movenet model.
             // https://github.com/tensorflow/tfjs-models/tree/master/pose-detection
             const movenetModelConfig: posedetection.MoveNetModelConfig = {
-                modelType: posedetection.movenet.modelType.SINGLEPOSE_LIGHTNING,
+                modelType: posedetection.movenet.modelType.MULTIPOSE_LIGHTNING,
+                minPoseScore: .2,
             };
 
-
-            const model = await posedetection.createDetector(
+            model = await posedetection.createDetector(
                 posedetection.SupportedModels.MoveNet,
                 movenetModelConfig
             );
-            setModel(model);
-
-            // Ready!
-            setTfReady(true);
         }
 
         prepare();
@@ -115,14 +114,13 @@ const PoseDetectionComponent = observer((params: PoseDetectionParams) => {
 
     const handleCameraStream = async (
         images: IterableIterator<tf.Tensor3D>,
-        updatePreview: () => void,
-        gl: ExpoWebGLRenderingContext
     ) => {
+
         const loop = async () => {
 
             const currentDate = Date.now();
 
-            if (currentDate - lastUpdated > POSE_DETECTION_UPDATE_MS) {
+            if (currentDate - lastUpdated > POSE_DETECTION_UPDATE_MS && model) {
 
                 lastUpdated = currentDate;
 
@@ -135,28 +133,31 @@ const PoseDetectionComponent = observer((params: PoseDetectionParams) => {
                     Date.now()
                 );
 
-                const firstWizardPose = mapToPose(poses[0]);
-                const secondWizardPose = mapToPose(poses[1]);
+                if (poses.length > 0 && poses.length < 3) {
+                    const firstWizardPose = mapToPose(poses[0]);
+                    const secondWizardPose = mapToPose(poses[1]);
 
-                const poseWithDerection = DetectorPoseDirection.getPosesWithDirection(firstWizardPose, secondWizardPose, CAM_PREVIEW_WIDTH);
+                    const poseWithDerection = DetectorPoseDirection.getPosesWithDirection(firstWizardPose, secondWizardPose, OUTPUT_TENSOR_WIDTH);
 
-                const leftWizardAction = getRandomAction(); //  detector.getActionByPose(poseWithDerection.left);//
-                const rightWizardAction = getRandomAction(); // detector.getActionByPose(poseWithDerection.right); //
+                    const leftWizardAction = detector.getActionByPose(poseWithDerection.left);//getRandomAction(); //
+                    const rightWizardAction = detector.getActionByPose(poseWithDerection.right); //getRandomAction(); //
 
-
-                if (params?.onPoseDetected) {
-                    params.onPoseDetected({
-                        leftWizardAction,
-                        rightWizardAction,
-                        unknownWizard: poses.length > 2,
-                    });
+                    if (params?.onPoseDetected) {
+                        params.onPoseDetected({
+                            leftWizardAction,
+                            rightWizardAction,
+                            unknownWizard: poses.length > 2,
+                        });
+                    }
                 }
 
                 tf.dispose([imageTensor]);
             }
+
             if (rafId.current === 0) {
                 return;
             }
+
             rafId.current = requestAnimationFrame(loop);
         };
 
@@ -175,40 +176,41 @@ const PoseDetectionComponent = observer((params: PoseDetectionParams) => {
     const getOutputTensorHeight = () => {
         return OUTPUT_TENSOR_HEIGHT;
     };
-    if (!tfReady) {
-        return (
-            <View style={styles.loadingMsg}>
-                <Text>Loading...</Text>
-            </View>
-        );
-    } else {
-        return (
+    // if (!tfReady) {
+    //     return (
+    //         <View style={styles.loadingMsg}>
+    //             <Text>Loading...</Text>
+    //         </View>
+    //     );
+    // } else {
+    return (
 
-            // Note that you don't need to specify `cameraTextureWidth` and
-            // `cameraTextureHeight` prop in `TensorCamera` below.
-            <View style={styles.containerLandscape}>
-                <TensorCamera
-                    ref={cameraRef}
-                    style={styles.camera}
-                    autorender={AUTO_RENDER}
-                    type={Camera.Constants.Type.front}
-                    // tensor related props
-                    resizeWidth={getOutputTensorWidth()}
-                    resizeHeight={getOutputTensorHeight()}
-                    resizeDepth={3}
-                    rotation={0}
-                    onReady={handleCameraStream}
-                />
-            </View>
-        );
-    }
+        // Note that you don't need to specify `cameraTextureWidth` and
+        // `cameraTextureHeight` prop in `TensorCamera` below.
+        <View style={styles.containerLandscape}>
+            <TensorCamera
+                ref={cameraRef}
+                ratio={RATIO}
+                style={styles.camera}
+                autorender={AUTO_RENDER}
+                type={CameraType.front}
+                // tensor related props
+                resizeWidth={getOutputTensorWidth()}
+                resizeHeight={getOutputTensorHeight()}
+                resizeDepth={3}
+                onReady={handleCameraStream}
+                useCustomShadersToResize={false}
+                cameraTextureWidth={getOutputTensorWidth()}
+                cameraTextureHeight={getOutputTensorHeight()}
+            />
+        </View>
+    );
+    // }
 });
 
 const styles = StyleSheet.create({
     containerLandscape: {
         position: 'relative',
-        width: CAM_PREVIEW_HEIGHT,
-        height: CAM_PREVIEW_WIDTH,
     },
     loadingMsg: {
         position: 'absolute',

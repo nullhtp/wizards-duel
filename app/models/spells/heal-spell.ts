@@ -8,7 +8,7 @@ export class HealSpell extends PerkWizardSpell {
     }
 
     cast(wizard: Wizard) {
-        wizard.heal(Math.floor(Math.random() * 10) + 10);
+        wizard.heal(Math.floor(Math.random() * 15) + 10);
 
         return 0;
     };

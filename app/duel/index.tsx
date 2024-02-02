@@ -1,17 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import { duelStore } from '../store/duel.store';
+import { duelStore } from './store/duel.store';
 import { observer } from 'mobx-react';
-import DuelHeader from './duel-header.component';
-import { ActionSoundsService } from '../service/action-sounds.service';
-import PoseDetectionComponent, { OnPoseDetectionParams } from './pose-detection.component';
-import { DuelStatus } from '../model/duel-status';
+import DuelHeader from './components/duel-header.component';
+import { ActionSoundsService } from './service/action-sounds.service';
+import PoseDetectionComponent, { OnPoseDetectionParams } from './components/pose-detection.component';
+import { DuelStatus } from './model/duel-status';
 import { StyleSheet, Text, View } from 'react-native';
-import { PreparationChecklist } from '../model/duel-preparation-checker';
-import DuelPreparation from './duel-preparation';
-import { AnnouncmentEvent, AnnouncmentSpeachService } from '../service/announcment-speach.service';
-import DuelResultComponent from './duel-result.component';
-import { Color } from '../../models/colors';
-import { Wizard } from '../../models/wizard';
+import { PreparationChecklist } from './model/duel-preparation-checker';
+import DuelPreparation from './components/duel-preparation';
+import { AnnouncmentEvent, AnnouncmentSpeachService } from './service/announcment-speach.service';
+import DuelResultComponent from './components/duel-result.component';
+import { Color } from '../models/colors';
+import { Wizard } from '../models/wizard';
+import { router } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
 
 const soundsHelper = new ActionSoundsService();
 const announcment = new AnnouncmentSpeachService();
@@ -70,7 +72,7 @@ const DuelComponent = observer(() => {
     const [rightChecklist, setRightChecklist] = useState<PreparationChecklist | null>(null);
 
     const onDuelEnd = () => {
-        // navigation.navigate('Main');
+        router.replace('/');
         duelStore.reset();
         setDuelState('');
         setWinner(null);
@@ -79,6 +81,8 @@ const DuelComponent = observer(() => {
     }
 
     const onPoseDetected = async (params: OnPoseDetectionParams) => {
+
+        console.log(params, duelStore.status);
 
         if (duelStore.status === DuelStatus.Created) {
             await announcment.play(AnnouncmentEvent.DuelPrepare);
@@ -145,12 +149,13 @@ const DuelComponent = observer(() => {
 
     return (
         <>
-            {poseDetectionComponent}
+            <StatusBar hidden={true} />
             <View style={styles.overlayContainer}>
                 {overlayComponent}
 
                 <Text style={styles.overlayText}>{duelState}</Text>
             </View>
+            {poseDetectionComponent}
         </>
     );
 });
@@ -164,6 +169,7 @@ const styles = StyleSheet.create({
         bottom: 0,
         justifyContent: 'center',
         alignItems: 'center',
+        zIndex: 1000,
     },
     overlayText: {
         fontSize: 42,

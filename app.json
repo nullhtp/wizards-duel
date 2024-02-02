@@ -1,12 +1,20 @@
 {
   "name": "wizards-duel-app-expo",
-  "displayName": "wizards-duel-app-expo",
+  "displayName": "Wizards Duel",
   "expo": {
-    "name": "wizards-duel-app-expo",
+    "name": "Wizards Duel",
+    "scheme": "demo://wizards-duel",
     "slug": "wizards-duel-app-expo",
     "version": "0.0.1",
     "assetBundlePatterns": [
       "**/*"
+    ],
+    "orientation": "landscape",
+    "androidStatusBar": {
+      "hidden": true
+    },
+    "plugins": [
+      "expo-router"
     ]
   }
 }

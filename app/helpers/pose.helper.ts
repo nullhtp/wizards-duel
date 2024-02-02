@@ -1,7 +1,7 @@
 import { ActionTypes } from "../models/action-types";
 import { BodyPart, BodyPartTypes, Pose } from "../duel/model/pose.type";
 
-const MAIN_CONFIDENCE = 0.1;
+const MAIN_CONFIDENCE = .00001;
 
 export class BodyPartHelper {
     private static isAnyPart(mainParts: BodyPart[], relatedParts: BodyPart[], condFn: (mainPart: BodyPart, relatedPart: BodyPart) => boolean) {
@@ -102,12 +102,12 @@ export class DetectorPoseAction {
             return ActionTypes.None;
         }
 
-        if (this.isPerkPose(pose)) {
-            return ActionTypes.Perk;
-        }
-
         if (this.isDefencePose(pose)) {
             return ActionTypes.Defense;
+        }
+
+        if (this.isPerkPose(pose)) {
+            return ActionTypes.Perk;
         }
 
 
