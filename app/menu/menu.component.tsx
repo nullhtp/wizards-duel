@@ -8,7 +8,7 @@ const MenuComponent = ({ navigation }: any) => {
         <TouchableOpacity style={{ width: '100%' }} onPress={() => navigation.navigate('Duel')}>
 
             <ImageBackground
-                source={require('../../assets/start_screen.png')}
+                source={require('../../assets/start_screen.jpg')}
                 style={{
                     width: '100%',
                     height: '100%',

@@ -10,7 +10,7 @@ const MenuComponent = () => {
         <TouchableOpacity style={{ width: '100%' }} onPress={() => router.replace('/duel')}>
             <StatusBar hidden={true} />
             <ImageBackground
-                source={require('../assets/start_screen.png')}
+                source={require('../assets/start_screen.jpg')}
                 style={{
                     width: '100%',
                     height: '100%',

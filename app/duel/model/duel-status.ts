@@ -3,5 +3,5 @@ export enum DuelStatus {
     Prepare = "prepare",
     PreparePass = "prepare-pass",
     InProgress = "in-progress",
-    Finished = "Finished"
+    Finished = "finished"
 }
