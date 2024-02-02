@@ -1,11 +1,10 @@
 {
-  "name": "wizards-duel-app-expo",
-  "displayName": "Wizards Duel",
   "expo": {
     "name": "Wizards Duel",
     "scheme": "wizards-duel",
     "slug": "wizards-duel",
     "version": "0.0.1",
+    "icon": "./assets/icon.png",
     "assetBundlePatterns": [
       "**/*"
     ],
