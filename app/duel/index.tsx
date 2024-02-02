@@ -82,8 +82,6 @@ const DuelComponent = observer(() => {
 
     const onPoseDetected = async (params: OnPoseDetectionParams) => {
 
-        console.log(params, duelStore.status);
-
         if (duelStore.status === DuelStatus.Created) {
             await announcment.play(AnnouncmentEvent.DuelPrepare);
             duelStore.updateGameStatus(DuelStatus.Prepare);
@@ -94,11 +92,6 @@ const DuelComponent = observer(() => {
         if (duelStore.status === DuelStatus.Finished) {
             return;
         }
-
-        // if (params.unknownWizard && !isUnknownWizardPlaying) {
-        //     isUnknownWizardPlaying = true;
-        //     announcment.play(AnnouncmentEvent.UnknownWizard, () => isUnknownWizardPlaying = false);
-        // }
 
         if (duelStore.status === DuelStatus.Prepare) {
             duelStore.preparationChecker.checkPose(params.leftWizardAction, params.rightWizardAction);

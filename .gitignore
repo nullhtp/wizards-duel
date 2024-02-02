@@ -52,6 +52,7 @@ xcuserdata
 # Android
 *.apk
 *.hprof
+/android
 /android/**/build
 /android/**/.cxx
 /android/**/local.properties
@@ -64,6 +65,7 @@ ReactAndroid-temp.aar
 jarjar-rules.txt
 
 # Dynamic Macros
+/ios
 /ios/Exponent/Supporting/EXBuildConstants.plist.bak
 /ios/Exponent/Supporting/EXBuildConstants.plist.json
 /ios/Exponent/Supporting/EXBuildConstants.plist

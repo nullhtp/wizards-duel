@@ -3,8 +3,8 @@
   "displayName": "Wizards Duel",
   "expo": {
     "name": "Wizards Duel",
-    "scheme": "demo://wizards-duel",
-    "slug": "wizards-duel-app-expo",
+    "scheme": "wizards-duel",
+    "slug": "wizards-duel",
     "version": "0.0.1",
     "assetBundlePatterns": [
       "**/*"
@@ -13,8 +13,23 @@
     "androidStatusBar": {
       "hidden": true
     },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/icon.png",
+        "backgroundColor": "#ffffff"
+      }
+    },
     "plugins": [
       "expo-router"
-    ]
+    ],
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "80058639-acea-4c55-8baf-a3f5ecdeb705"
+      }
+    },
+    "owner": "null.htp"
   }
 }
