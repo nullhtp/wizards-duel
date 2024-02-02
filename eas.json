@@ -7,6 +7,12 @@
         "preview": {
             "distribution": "internal"
         },
-        "production": {}
+        "production": {
+            "node": "16.18.0",
+            "yarn": "1.22.21",
+            "android": {
+                "ndk": "25.1.8937393"
+            }
+        }
     }
 }
