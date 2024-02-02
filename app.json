@@ -17,7 +17,7 @@
         "foregroundImage": "./assets/icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.null.htp.wizardsduel"
+      "package": "com.nullhtp.wizardsduel"
     },
     "plugins": [
       "expo-router"
