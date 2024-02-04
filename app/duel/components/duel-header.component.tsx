@@ -1,12 +1,30 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Dimensions } from 'react-native';
 import { observer } from 'mobx-react';
 
-const DuelHeader = observer(({ duelStore }: any) => {
+const DuelHeader = observer(({ duelStore, onTimerEnd }: any) => {
     const { leftHealth, leftMana, rightHealth, rightMana } = duelStore;
+    const [currentTimer, setCurrentTimer] = useState(70);
+
+    useEffect(() => {
+        const subscription = setInterval(() => {
+            const newTimer = currentTimer - 1;
+            if (newTimer >= 0) {
+                setCurrentTimer(newTimer);
+
+            } else {
+                onTimerEnd();
+            }
+        }, 1000)
+
+        return () => clearInterval(subscription);
+    }, [currentTimer]);
 
     return (
         <View style={styles.container}>
+            <View style={styles.timerContainer}>
+                <Text style={styles.readableTextOnColoredBackground}>{currentTimer}</Text>
+            </View>
             <WizardStatus side="left" health={leftHealth} mana={leftMana} />
             <WizardStatus side="right" health={rightHealth} mana={rightMana} />
         </View>
@@ -33,6 +51,14 @@ const WizardStatus = ({ side, health, mana }: any) => (
 const { height, width } = Dimensions.get('screen');
 
 const styles = StyleSheet.create({
+    timerContainer: {
+        position: 'absolute',
+        top: 10,
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: width,
+        zIndex: 100,
+    },
     container: {
         position: 'relative',
         width: width,

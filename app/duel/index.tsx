@@ -80,6 +80,10 @@ const DuelComponent = observer(() => {
         setRightChecklist(null);
     }
 
+    const timeOver = () => {
+        duelStore.duel.complete$.next(null);
+    }
+
     const onPoseDetected = async (params: OnPoseDetectionParams) => {
 
         if (duelStore.status === DuelStatus.Created) {
@@ -128,7 +132,7 @@ const DuelComponent = observer(() => {
             poseDetectionComponent = <PoseDetectionComponent onPoseDetected={onPoseDetected} />;
             break;
         case DuelStatus.InProgress:
-            overlayComponent = <DuelHeader duelStore={duelStore} />;
+            overlayComponent = <DuelHeader duelStore={duelStore} onTimerEnd={timeOver} />;
             poseDetectionComponent = <PoseDetectionComponent onPoseDetected={onPoseDetected} />;
             break;
         case DuelStatus.Finished:
