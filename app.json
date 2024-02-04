@@ -1,24 +1,21 @@
 {
   "expo": {
     "name": "Wizards Duel",
-    "scheme": "wizards-duel",
     "slug": "wizards-duel",
-    "version": "0.0.1",
+    "version": "0.0.2",
+    "orientation": "landscape",
     "icon": "./assets/icon.png",
+    "scheme": "wizards-duel",
     "assetBundlePatterns": [
       "**/*"
     ],
-    "orientation": "landscape",
     "androidStatusBar": {
-      "hidden": true,
+      "hidden": false,
       "backgroundColor": "#C2185B",
       "translucent": true
     },
     "androidNavigationBar": {
-      "visible": "immersive"
-    },
-    "developmentClient": {
-      "silentLaunch": true
+      "visible": false
     },
     "android": {
       "adaptiveIcon": {
