@@ -6,7 +6,7 @@ export class ShieldSpell extends DefenseSpell {
     }
 
     cast() {
-        const damage_reduce = Math.floor(Math.random() * 5) + 15
+        const damage_reduce = Math.floor(Math.random() * 5) + 10
         return damage_reduce;
     }
 }

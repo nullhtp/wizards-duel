@@ -45,7 +45,7 @@ const OUTPUT_TENSOR_HEIGHT = OUTPUT_TENSOR_WIDTH / (IS_IOS ? 9 / 16 : 3 / 4);
 // Whether to auto-render TensorCamera preview.
 const RATIO = !IS_IOS ? '16:9' : '4:3';
 const AUTO_RENDER = true;
-const POSE_DETECTION_UPDATE_MS = 500;
+const POSE_DETECTION_UPDATE_MS = 800;
 let lastUpdated = Date.now();
 
 let model: posedetection.PoseDetector | null = null

@@ -38,8 +38,8 @@ export default () => {
                     </Text>
                     <View style={styles.list}>
                         <Text style={styles.text}>- Attack Spell: Costs 10 MP, deals 10-15 HP damage to the opponent.</Text>
-                        <Text style={styles.text}>- Defence Spell: Costs 5 MP, reduces incoming damage by 15-20 HP.</Text>
-                        <Text style={styles.text}>- Perk Spell: Costs 15 MP, heals the caster for 10-25 HP.</Text>
+                        <Text style={styles.text}>- Defence Spell: Costs 5 MP, reduces incoming damage by 10-15 HP.</Text>
+                        <Text style={styles.text}>- Perk Spell: Costs 15 MP, heals the caster for 10-15 HP.</Text>
                     </View>
                     <Text style={styles.text}>
                         - Magic Point Recovery: Your MP recovers at a rate of 1 point per second, so timing and strategy are crucial for victory.
