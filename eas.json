@@ -5,7 +5,12 @@
             "distribution": "internal"
         },
         "preview": {
-            "distribution": "internal"
+            "distribution": "internal",
+            "node": "21.5.0",
+            "yarn": "1.22.21",
+            "android": {
+                "ndk": "25.1.8937393"
+            }
         },
         "production": {
             "node": "21.5.0",

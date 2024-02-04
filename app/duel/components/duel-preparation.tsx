@@ -32,7 +32,7 @@ const PoseChecklist = ({ side, checklist }: any) => (
     </View >
 );
 
-const { height, width } = Dimensions.get('window');
+const { height, width } = Dimensions.get('screen');
 
 const styles = StyleSheet.create({
     container: {
@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
         textShadowColor: 'rgba(0, 0, 0, 0.75)', // Black shadow for depth
         textShadowOffset: { width: 1, height: 1 }, // Shadow offset
         textShadowRadius: 4,   // Soft shadow for better legibility
-        paddingHorizontal: 20
+        paddingHorizontal: 40
     },
 
     containerMerge: {

@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Button, TouchableOpacity } from 'react-native';
+import { StyleSheet, Button, View } from 'react-native';
 import { ImageBackground } from 'react-native';
 import { router } from "expo-router";
 import { StatusBar } from 'expo-status-bar';
@@ -7,7 +7,7 @@ import { StatusBar } from 'expo-status-bar';
 const MenuComponent = () => {
 
     return (
-        <TouchableOpacity style={{ width: '100%' }} onPress={() => router.replace('/duel')}>
+        <View>
             <StatusBar hidden={true} />
             <ImageBackground
                 source={require('../assets/start_screen.jpg')}
@@ -18,9 +18,17 @@ const MenuComponent = () => {
                     alignItems: 'center',
                 }}
             >
-            </ImageBackground>
-        </TouchableOpacity>
+                <View style={styles.container}>
 
+                    <View style={styles.buttonsContainer}>
+                        <Button onPress={() => router.replace('/duel')} title='Start'></Button>
+                    </View>
+                    <View style={styles.buttonsContainer}>
+                        <Button onPress={() => router.replace('/instruction')} title='Instruction'></Button>
+                    </View>
+                </View>
+            </ImageBackground>
+        </View>
     );
 };
 
@@ -35,6 +43,14 @@ const styles = StyleSheet.create({
         textShadowRadius: 4,
         textAlign: 'center',
         position: 'absolute',
+    },
+
+    container: {
+        top: 130,
+    },
+
+    buttonsContainer: {
+        margin: 5,
     },
 
     bottomText: {

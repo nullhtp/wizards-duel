@@ -10,7 +10,15 @@
     ],
     "orientation": "landscape",
     "androidStatusBar": {
-      "hidden": true
+      "hidden": true,
+      "backgroundColor": "#C2185B",
+      "translucent": true
+    },
+    "androidNavigationBar": {
+      "visible": "immersive"
+    },
+    "developmentClient": {
+      "silentLaunch": true
     },
     "android": {
       "adaptiveIcon": {
