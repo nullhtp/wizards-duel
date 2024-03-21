@@ -2,7 +2,7 @@
     "expo": {
         "name": "Wizards Duel",
         "slug": "wizards-duel",
-        "version": "0.0.3",
+        "version": "0.0.2",
         "orientation": "landscape",
         "icon": "./assets/icon.png",
         "scheme": "wizards-duel",
@@ -20,7 +20,8 @@
                 "foregroundImage": "./assets/icon.png",
                 "backgroundColor": "#ffffff"
             },
-            "package": "com.nullhtp.wizardsduel"
+            "package": "com.nullhtp.wizardsduel",
+            "versionCode": 2
         },
         "plugins": ["expo-router"],
         "extra": {

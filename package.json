@@ -1,7 +1,7 @@
 {
     "name": "pose-detection-with-tfjs-react-native-expo",
     "main": "expo-router/entry",
-    "version": "0.0.3",
+    "version": "0.0.1",
     "license": "Apache-2.0",
     "scripts": {
         "build-dep": "cd ../../../tfjs/tfjs-react-native && yarn build-npm",
