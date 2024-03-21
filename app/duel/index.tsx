@@ -8,8 +8,6 @@ import PoseDetectionComponent, {
 } from './components/pose-detection.component';
 import { DuelStatus } from './model/duel-status';
 import { StyleSheet, Text, View } from 'react-native';
-import { PreparationChecklist } from './model/duel-preparation-checker';
-import DuelPreparation from './components/duel-preparation';
 import {
     AnnouncmentEvent,
     AnnouncmentSpeachService,
@@ -19,15 +17,12 @@ import { Color } from '../models/colors';
 import { Wizard } from '../models/wizard';
 import { router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
+import DuelLoadingComponent from './components/duel-loading.component';
 
 const soundsHelper = new ActionSoundsService();
 const announcment = new AnnouncmentSpeachService();
 
-let isUnknownWizardPlaying = false;
-
 const DuelComponent = observer(() => {
-    // const [lastUpdated, setLastUpdated] = useState(Date.now());
-
     useEffect(() => {
         const subscription = duelStore.complete$.subscribe((wizard) => {
             setDuelState('');
@@ -86,7 +81,7 @@ const DuelComponent = observer(() => {
     const onPoseDetected = async (params: OnPoseDetectionParams) => {
         if (duelStore.status === DuelStatus.Created) {
             duelStore.updateGameStatus(DuelStatus.PreparePass);
-            announcment.play(AnnouncmentEvent.DuelBegin, () => {
+            announcment.play(AnnouncmentEvent.DuelPrepare, () => {
                 duelStore.updateGameStatus(DuelStatus.InProgress);
             });
             return;
@@ -112,7 +107,7 @@ const DuelComponent = observer(() => {
         case DuelStatus.Created:
         case DuelStatus.Prepare:
         case DuelStatus.PreparePass:
-            overlayComponent = <Text>Loading...</Text>;
+            overlayComponent = <DuelLoadingComponent />;
             poseDetectionComponent = (
                 <PoseDetectionComponent onPoseDetected={onPoseDetected} />
             );
