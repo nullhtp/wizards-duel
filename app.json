@@ -1,40 +1,36 @@
 {
-  "expo": {
-    "name": "Wizards Duel",
-    "slug": "wizards-duel",
-    "version": "0.0.2",
-    "orientation": "landscape",
-    "icon": "./assets/icon.png",
-    "scheme": "wizards-duel",
-    "assetBundlePatterns": [
-      "**/*"
-    ],
-    "androidStatusBar": {
-      "hidden": false,
-      "backgroundColor": "#C2185B",
-      "translucent": true
-    },
-    "androidNavigationBar": {
-      "visible": "immersive"
-    },
-    "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/icon.png",
-        "backgroundColor": "#ffffff"
-      },
-      "package": "com.nullhtp.wizardsduel"
-    },
-    "plugins": [
-      "expo-router"
-    ],
-    "extra": {
-      "router": {
-        "origin": false
-      },
-      "eas": {
-        "projectId": "80058639-acea-4c55-8baf-a3f5ecdeb705"
-      }
-    },
-    "owner": "null.htp"
-  }
+    "expo": {
+        "name": "Wizards Duel",
+        "slug": "wizards-duel",
+        "version": "0.0.3",
+        "orientation": "landscape",
+        "icon": "./assets/icon.png",
+        "scheme": "wizards-duel",
+        "assetBundlePatterns": ["**/*"],
+        "androidStatusBar": {
+            "hidden": false,
+            "backgroundColor": "#C2185B",
+            "translucent": true
+        },
+        "androidNavigationBar": {
+            "visible": "immersive"
+        },
+        "android": {
+            "adaptiveIcon": {
+                "foregroundImage": "./assets/icon.png",
+                "backgroundColor": "#ffffff"
+            },
+            "package": "com.nullhtp.wizardsduel"
+        },
+        "plugins": ["expo-router"],
+        "extra": {
+            "router": {
+                "origin": false
+            },
+            "eas": {
+                "projectId": "80058639-acea-4c55-8baf-a3f5ecdeb705"
+            }
+        },
+        "owner": "null.htp"
+    }
 }

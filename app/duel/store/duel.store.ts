@@ -9,7 +9,6 @@ import { Observable } from 'rxjs';
 import { DuelStatus } from '../model/duel-status';
 import { DuelPreparationChecker } from '../model/duel-preparation-checker';
 
-
 class DuelStore {
     complete$: Observable<Wizard | null>;
     actions$: Observable<DuelActionParams>;
@@ -23,10 +22,10 @@ class DuelStore {
 
     winner: Wizard | null = null;
 
-    leftHealth = 0;
-    rightHealth = 0;
-    leftMana = 0;
-    rightMana = 0;
+    leftHealth = 100;
+    rightHealth = 100;
+    leftMana = 100;
+    rightMana = 100;
 
     constructor() {
         makeAutoObservable(this);
@@ -45,18 +44,20 @@ class DuelStore {
     reset = () => {
         this.preparationChecker = new DuelPreparationChecker();
         this.leftWizard = new Wizard(Color.Red, new SpellBook(new HealSpell()));
-        this.rightWizard = new Wizard(Color.Blue, new SpellBook(new HealSpell()));
+        this.rightWizard = new Wizard(
+            Color.Blue,
+            new SpellBook(new HealSpell()),
+        );
         this.duel = new Duel(this.leftWizard, this.rightWizard);
         this.status = DuelStatus.Created;
         this.lastUpdated = Date.now();
 
-
         this.winner = null;
 
-        this.leftHealth = 0;
-        this.rightHealth = 0;
-        this.leftMana = 0;
-        this.rightMana = 0;
+        this.leftHealth = 100;
+        this.rightHealth = 100;
+        this.leftMana = 100;
+        this.rightMana = 100;
 
         this.complete$ = this.duel.complete$.asObservable();
         this.actions$ = this.duel.actions$.asObservable();
@@ -70,7 +71,6 @@ class DuelStore {
         this.leftMana = this.leftWizard.getMana();
         this.rightMana = this.rightWizard.getMana();
     };
-
 }
 
 export const duelStore = new DuelStore();

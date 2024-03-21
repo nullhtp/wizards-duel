@@ -3,12 +3,17 @@ import { duelStore } from './store/duel.store';
 import { observer } from 'mobx-react';
 import DuelHeader from './components/duel-header.component';
 import { ActionSoundsService } from './service/action-sounds.service';
-import PoseDetectionComponent, { OnPoseDetectionParams } from './components/pose-detection.component';
+import PoseDetectionComponent, {
+    OnPoseDetectionParams,
+} from './components/pose-detection.component';
 import { DuelStatus } from './model/duel-status';
 import { StyleSheet, Text, View } from 'react-native';
 import { PreparationChecklist } from './model/duel-preparation-checker';
 import DuelPreparation from './components/duel-preparation';
-import { AnnouncmentEvent, AnnouncmentSpeachService } from './service/announcment-speach.service';
+import {
+    AnnouncmentEvent,
+    AnnouncmentSpeachService,
+} from './service/announcment-speach.service';
 import DuelResultComponent from './components/duel-result.component';
 import { Color } from '../models/colors';
 import { Wizard } from '../models/wizard';
@@ -32,7 +37,6 @@ const DuelComponent = observer(() => {
 
             if (wizard?.color === Color.Red) {
                 announcment.play(AnnouncmentEvent.DuelEndRedWin);
-
             } else if (wizard?.color === Color.Blue) {
                 announcment.play(AnnouncmentEvent.DuelEndBlueWin);
             } else {
@@ -45,7 +49,6 @@ const DuelComponent = observer(() => {
 
     useEffect(() => {
         const subscription = duelStore.actions$.subscribe((action) => {
-
             let duelStatus = '';
             if (action.left) {
                 soundsHelper.play(action.left, 'left');
@@ -68,28 +71,24 @@ const DuelComponent = observer(() => {
 
     const [duelState, setDuelState] = useState<string>('');
     const [winner, setWinner] = useState<Wizard | null>(null);
-    const [leftChecklist, setLeftChecklist] = useState<PreparationChecklist | null>(null);
-    const [rightChecklist, setRightChecklist] = useState<PreparationChecklist | null>(null);
 
     const onDuelEnd = () => {
         router.replace('/');
         duelStore.reset();
         setDuelState('');
         setWinner(null);
-        setLeftChecklist(null);
-        setRightChecklist(null);
-    }
+    };
 
     const timeOver = () => {
         duelStore.duel.complete$.next(null);
-    }
+    };
 
     const onPoseDetected = async (params: OnPoseDetectionParams) => {
-
         if (duelStore.status === DuelStatus.Created) {
-            await announcment.play(AnnouncmentEvent.DuelPrepare);
-            duelStore.updateGameStatus(DuelStatus.Prepare);
-
+            duelStore.updateGameStatus(DuelStatus.PreparePass);
+            announcment.play(AnnouncmentEvent.DuelBegin, () => {
+                duelStore.updateGameStatus(DuelStatus.InProgress);
+            });
             return;
         }
 
@@ -97,26 +96,11 @@ const DuelComponent = observer(() => {
             return;
         }
 
-        if (duelStore.status === DuelStatus.Prepare) {
-            duelStore.preparationChecker.checkPose(params.leftWizardAction, params.rightWizardAction);
-
-            if (duelStore.preparationChecker.isAllChecked()) {
-                duelStore.updateGameStatus(DuelStatus.PreparePass);
-                announcment.play(AnnouncmentEvent.DuelBegin, () => {
-                    duelStore.updateGameStatus(DuelStatus.InProgress);
-                });
-            }
-
-
-            const checklists = duelStore.preparationChecker.getCheckLists();
-            setLeftChecklist({ ...checklists.left });
-            setRightChecklist({ ...checklists.right });
-
-            return;
-        }
-
         if (duelStore.status === DuelStatus.InProgress) {
-            duelStore.performRound(params.leftWizardAction, params.rightWizardAction);
+            duelStore.performRound(
+                params.leftWizardAction,
+                params.rightWizardAction,
+            );
             return;
         }
     };
@@ -128,15 +112,23 @@ const DuelComponent = observer(() => {
         case DuelStatus.Created:
         case DuelStatus.Prepare:
         case DuelStatus.PreparePass:
-            overlayComponent = <DuelPreparation leftChecklist={leftChecklist} rightChecklist={rightChecklist} />;
-            poseDetectionComponent = <PoseDetectionComponent onPoseDetected={onPoseDetected} />;
+            overlayComponent = <Text>Loading...</Text>;
+            poseDetectionComponent = (
+                <PoseDetectionComponent onPoseDetected={onPoseDetected} />
+            );
             break;
         case DuelStatus.InProgress:
-            overlayComponent = <DuelHeader duelStore={duelStore} onTimerEnd={timeOver} />;
-            poseDetectionComponent = <PoseDetectionComponent onPoseDetected={onPoseDetected} />;
+            overlayComponent = (
+                <DuelHeader duelStore={duelStore} onTimerEnd={timeOver} />
+            );
+            poseDetectionComponent = (
+                <PoseDetectionComponent onPoseDetected={onPoseDetected} />
+            );
             break;
         case DuelStatus.Finished:
-            overlayComponent = <DuelResultComponent win={winner} onClose={onDuelEnd} />;
+            overlayComponent = (
+                <DuelResultComponent win={winner} onClose={onDuelEnd} />
+            );
             poseDetectionComponent = null;
             break;
 
