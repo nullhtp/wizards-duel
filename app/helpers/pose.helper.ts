@@ -122,7 +122,7 @@ export class DetectorPoseAction {
 
 export class DetectorPoseDirection {
 
-    private static posecChecker(pose: Pose, compFn: (part: BodyPart) => boolean) {
+    private static poseChecker(pose: Pose, compFn: (part: BodyPart) => boolean) {
         if (!pose) {
             return false;
         }
@@ -139,13 +139,13 @@ export class DetectorPoseDirection {
     static isPoseLeft(halfWidth: number, pose: Pose) {
         const compFn = (part: BodyPart) => part.confidence > MAIN_CONFIDENCE && part.x > halfWidth
 
-        return this.posecChecker(pose, compFn);
+        return this.poseChecker(pose, compFn);
     }
 
     static isPoseRight(halfWidth: number, pose: Pose) {
         const compFn = (part: BodyPart) => part.confidence > MAIN_CONFIDENCE && part.x < halfWidth
 
-        return this.posecChecker(pose, compFn);
+        return this.poseChecker(pose, compFn);
     }
 
     static detectPoseDirection(halfWidth: number, pose: Pose | null): 'left' | 'right' | 'none' {
@@ -165,10 +165,10 @@ export class DetectorPoseDirection {
     }
 
     static getPosesWithDirection(poseOne: Pose | null, poseTwo: Pose | null, width: number) {
-        const haflScreenWidth = width / 2;
+        const halfScreenWidth = width / 2;
 
-        const poseOneDirection = this.detectPoseDirection(haflScreenWidth, poseOne);
-        const poseTwoDirection = this.detectPoseDirection(haflScreenWidth, poseTwo);
+        const poseOneDirection = this.detectPoseDirection(halfScreenWidth, poseOne);
+        const poseTwoDirection = this.detectPoseDirection(halfScreenWidth, poseTwo);
 
         const result: { left: Pose | null, right: Pose | null } = { left: null, right: null }
 
@@ -191,6 +191,3 @@ export class DetectorPoseDirection {
         return result;
     }
 }
-
-
-
